@@ -40,6 +40,10 @@ impl Parsable for Post {
         writer.write_additional_data(&self.additional_data)?;
         Ok(())
     }
+
+    fn as_any(self: Box<Self>) -> Box<dyn std::any::Any> {
+        self
+    }
 }
 
 impl Post {

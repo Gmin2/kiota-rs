@@ -34,10 +34,7 @@ impl PostItemRequestBuilder {
         let factory: Box<dyn Fn(&dyn ParseNode) -> Result<Box<dyn Parsable>, KiotaError> + Send + Sync> =
             Box::new(|node| Ok(Box::new(Post::create_from_discriminator_value(node)?)));
         let result = self.base.request_adapter.send(&request_info, &factory, None).await?;
-        Ok(result.and_then(|r| {
-            // TODO: downcast dyn Parsable to concrete type
-            None
-        }))
+        Ok(result.and_then(|r| r.as_any().downcast::<Post>().ok().map(|b| *b)))
     }
     /// Update post
     pub async fn patch(&self, body: &Option<Post>, config: Option<&RequestConfiguration<DefaultQueryParameters>>) -> Result<Option<Post>, KiotaError> {
@@ -45,10 +42,7 @@ impl PostItemRequestBuilder {
         let factory: Box<dyn Fn(&dyn ParseNode) -> Result<Box<dyn Parsable>, KiotaError> + Send + Sync> =
             Box::new(|node| Ok(Box::new(Post::create_from_discriminator_value(node)?)));
         let result = self.base.request_adapter.send(&request_info, &factory, None).await?;
-        Ok(result.and_then(|r| {
-            // TODO: downcast dyn Parsable to concrete type
-            None
-        }))
+        Ok(result.and_then(|r| r.as_any().downcast::<Post>().ok().map(|b| *b)))
     }
     /// Delete post
     pub fn to_delete_request_information(&self, config: Option<&RequestConfiguration<DefaultQueryParameters>>) -> Result<RequestInformation, KiotaError> {

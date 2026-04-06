@@ -35,9 +35,11 @@ impl PostsRequestBuilder {
         let request_info = self.to_get_request_information(config)?;
         let factory: Box<dyn Fn(&dyn ParseNode) -> Result<Box<dyn Parsable>, KiotaError> + Send + Sync> =
             Box::new(|node| Ok(Box::new(Post::create_from_discriminator_value(node)?)));
-        let result = self.base.request_adapter.send(&request_info, &factory, None).await?;
-        // TODO: collection deserialization
-        todo!()
+        let results = self.base.request_adapter.send_collection(&request_info, &factory, None).await?;
+        let typed: Vec<Post> = results.into_iter().filter_map(|r| {
+            r.as_any().downcast::<Post>().ok().map(|b| *b)
+        }).collect();
+        Ok(typed)
     }
     /// Create post
     pub async fn post(&self, body: &Option<Post>, config: Option<&RequestConfiguration<DefaultQueryParameters>>) -> Result<Option<Post>, KiotaError> {
@@ -45,10 +47,7 @@ impl PostsRequestBuilder {
         let factory: Box<dyn Fn(&dyn ParseNode) -> Result<Box<dyn Parsable>, KiotaError> + Send + Sync> =
             Box::new(|node| Ok(Box::new(Post::create_from_discriminator_value(node)?)));
         let result = self.base.request_adapter.send(&request_info, &factory, None).await?;
-        Ok(result.and_then(|r| {
-            // TODO: downcast dyn Parsable to concrete type
-            None
-        }))
+        Ok(result.and_then(|r| r.as_any().downcast::<Post>().ok().map(|b| *b)))
     }
     /// Get posts
     pub fn to_get_request_information(&self, config: Option<&RequestConfiguration<DefaultQueryParameters>>) -> Result<RequestInformation, KiotaError> {
