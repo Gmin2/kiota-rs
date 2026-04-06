@@ -28,7 +28,7 @@ pub use request_information::{
 };
 pub use request_option::RequestOption;
 pub use serialization::{
-    AdditionalDataHolder, Parsable, ParsableFactory, ParseNode,
+    Parsable, ParsableFactory, ParseNode,
     ParseNodeFactory, SerializationWriter, SerializationWriterFactory,
 };
 
@@ -62,6 +62,14 @@ pub trait RequestAdapter: Send + Sync {
         request_info: &RequestInformation,
         error_mappings: Option<&ErrorMappings>,
     ) -> Result<(), KiotaError>;
+
+    /// Sends a request and deserializes a collection response.
+    async fn send_collection(
+        &self,
+        request_info: &RequestInformation,
+        factory: &ErasedParsableFactory,
+        error_mappings: Option<&ErrorMappings>,
+    ) -> Result<Vec<Box<dyn Parsable>>, KiotaError>;
 
     /// Sends a request and returns the raw response bytes.
     async fn send_primitive(

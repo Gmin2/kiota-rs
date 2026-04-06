@@ -5,7 +5,7 @@ pub mod registry;
 pub mod serialization_writer;
 pub mod serialization_writer_factory;
 
-pub use parsable::{AdditionalDataHolder, ComposedTypeWrapper, Parsable, ParsableFactory};
+pub use parsable::{ComposedTypeWrapper, Parsable, ParsableFactory};
 pub use parse_node::{EnumFactory, FromParseNode, ParsableAction, ParseNode};
 pub use parse_node_factory::ParseNodeFactory;
 pub use registry::{ParseNodeFactoryRegistry, SerializationWriterFactoryRegistry};

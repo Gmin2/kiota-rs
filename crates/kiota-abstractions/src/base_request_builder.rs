@@ -73,6 +73,14 @@ impl crate::RequestAdapter for NullAdapter {
     ) -> Result<Option<Box<dyn crate::Parsable>>, crate::KiotaError> {
         panic!("NullAdapter: no request adapter configured")
     }
+    async fn send_collection(
+        &self,
+        _: &crate::RequestInformation,
+        _: &crate::ErasedParsableFactory,
+        _: Option<&crate::ErrorMappings>,
+    ) -> Result<Vec<Box<dyn crate::Parsable>>, crate::KiotaError> {
+        panic!("NullAdapter: no request adapter configured")
+    }
     async fn send_no_content(
         &self,
         _: &crate::RequestInformation,

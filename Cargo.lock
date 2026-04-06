@@ -590,6 +590,7 @@ dependencies = [
  "http",
  "kiota-abstractions",
  "reqwest",
+ "serde_json",
  "tokio",
  "url",
 ]
