@@ -10,5 +10,6 @@ kiota-abstractions = { workspace = true }
 async-trait = { workspace = true }
 http = { workspace = true }
 reqwest = { workspace = true }
+serde_json = { workspace = true }
 tokio = { workspace = true }
 url = { workspace = true }

@@ -179,11 +179,74 @@ impl RequestAdapter for HttpClientRequestAdapter {
         let node = self.get_root_parse_node(&body, &content_type)?;
         match node {
             Some(n) => {
-                let result = _factory(n.as_ref())?;
+                let mut result = _factory(n.as_ref())?;
+                populate_from_node(result.as_mut(), n.as_ref())?;
                 Ok(Some(result))
             }
             None => Ok(None),
         }
+    }
+
+    async fn send_collection(
+        &self,
+        request_info: &RequestInformation,
+        factory: &ErasedParsableFactory,
+        error_mappings: Option<&ErrorMappings>,
+    ) -> Result<Vec<Box<dyn Parsable>>, KiotaError> {
+        let mut info = clone_request_info(request_info);
+        info.path_parameters
+            .insert("baseurl".to_string(), self.base_url.clone());
+
+        self.auth_provider
+            .authenticate_request(&mut info, None)
+            .await?;
+
+        let response = self.get_response(&info).await?;
+        let status = response.status().as_u16();
+        let content_type = response
+            .headers()
+            .get("content-type")
+            .and_then(|v| v.to_str().ok())
+            .unwrap_or("")
+            .to_string();
+        let body = response
+            .bytes()
+            .await
+            .map_err(|e| KiotaError::Http(e.to_string()))?;
+
+        self.throw_if_failed(status, &body, &content_type, error_mappings)?;
+
+        if status == 204 || body.is_empty() {
+            return Ok(Vec::new());
+        }
+
+        // Parse the JSON array — each element is deserialized via the factory
+        let root_value: serde_json::Value = serde_json::from_slice(&body)
+            .map_err(|e| KiotaError::Deserialization(e.to_string()))?;
+
+        let mut items = Vec::new();
+        match root_value {
+            serde_json::Value::Array(arr) => {
+                for item_val in arr {
+                    let item_bytes = serde_json::to_vec(&item_val)
+                        .map_err(|e| KiotaError::Deserialization(e.to_string()))?;
+                    if let Some(node) = self.get_root_parse_node(&item_bytes, &content_type)? {
+                        let mut parsable = factory(node.as_ref())?;
+                        populate_from_node(parsable.as_mut(), node.as_ref())?;
+                        items.push(parsable);
+                    }
+                }
+            }
+            _ => {
+                if let Some(node) = self.get_root_parse_node(&body, &content_type)? {
+                    let mut parsable = factory(node.as_ref())?;
+                    populate_from_node(parsable.as_mut(), node.as_ref())?;
+                    items.push(parsable);
+                }
+            }
+        };
+
+        Ok(items)
     }
 
     async fn send_no_content(
@@ -278,4 +341,18 @@ fn clone_request_info(info: &RequestInformation) -> RequestInformation {
     }
     new_info.content = info.content.clone();
     new_info
+}
+
+/// Iterates the parse node's child fields and calls assign_field on the model.
+fn populate_from_node(
+    model: &mut dyn Parsable,
+    node: &dyn ParseNode,
+) -> Result<(), KiotaError> {
+    let field_names = model.field_names();
+    for field in &field_names {
+        if let Ok(Some(child)) = node.get_child_node(field) {
+            model.assign_field(field, child.as_ref())?;
+        }
+    }
+    Ok(())
 }
