@@ -82,6 +82,20 @@ impl RequestInformation {
         self.headers.try_add("Content-Type", content_type);
     }
 
+    /// Serializes a Parsable body and sets it as request content.
+    pub fn set_content_from_parsable(
+        &mut self,
+        writer_factory: &dyn crate::SerializationWriterFactory,
+        content_type: &str,
+        body: &dyn crate::Parsable,
+    ) -> Result<(), KiotaError> {
+        let mut writer = writer_factory.get_serialization_writer(content_type)?;
+        body.serialize(writer.as_mut())?;
+        let bytes = writer.get_serialized_content()?;
+        self.set_stream_content(bytes, content_type);
+        Ok(())
+    }
+
     pub fn configure<Q: QueryParameters>(&mut self, config: &RequestConfiguration<Q>) {
         if let Some(ref qp) = config.query_parameters {
             self.add_query_parameters(qp);
