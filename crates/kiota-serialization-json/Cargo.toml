@@ -1,0 +1,13 @@
+[package]
+name = "kiota-serialization-json"
+version = "0.1.0"
+edition = "2021"
+description = "JSON serialization for Kiota-generated Rust API clients"
+license = "MIT"
+
+[dependencies]
+kiota-abstractions = { workspace = true }
+chrono = { workspace = true }
+indexmap = { workspace = true }
+serde_json = { workspace = true }
+uuid = { workspace = true }
