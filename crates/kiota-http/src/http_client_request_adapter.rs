@@ -1,9 +1,7 @@
 use std::sync::Arc;
 
 use kiota_abstractions::authentication::AuthenticationProvider;
-use kiota_abstractions::serialization::{
-    ParseNode, ParseNodeFactory, Parsable, SerializationWriterFactory,
-};
+use kiota_abstractions::serialization::{ParseNode, Parsable, SerializationWriterFactory};
 use kiota_abstractions::serialization::registry::{
     PARSE_NODE_FACTORY_REGISTRY, SERIALIZATION_WRITER_FACTORY_REGISTRY,
 };
@@ -123,7 +121,7 @@ impl HttpClientRequestAdapter {
 
         if let Some(factory) = factory {
             if let Ok(Some(node)) = self.get_root_parse_node(body, content_type) {
-                if let Ok(err_obj) = factory(node.as_ref()) {
+                if let Ok(_err_obj) = factory(node.as_ref()) {
                     return Err(KiotaError::Api(kiota_abstractions::ApiError {
                         message: format!("API error {status}"),
                         response_status_code: status as i32,
@@ -220,7 +218,7 @@ impl RequestAdapter for HttpClientRequestAdapter {
             return Ok(Vec::new());
         }
 
-        // Parse the JSON array — each element is deserialized via the factory
+        // Parse the JSON array each element is deserialized via the factory
         let root_value: serde_json::Value = serde_json::from_slice(&body)
             .map_err(|e| KiotaError::Deserialization(e.to_string()))?;
 

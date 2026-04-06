@@ -5,7 +5,6 @@ use crate::middleware::{Middleware, MiddlewarePipeline};
 const RETRIABLE_STATUS_CODES: &[u16] = &[429, 503, 504];
 const DEFAULT_MAX_RETRIES: u32 = 3;
 const DEFAULT_DELAY_SECS: u64 = 3;
-const MAX_DELAY_SECS: u64 = 180;
 
 pub struct RetryHandler {
     pub max_retries: u32,
@@ -44,7 +43,7 @@ impl Middleware for RetryHandler {
     }
 }
 
-fn backoff_delay(base_secs: u64, attempt: u32) -> Duration {
+fn _backoff_delay(base_secs: u64, attempt: u32) -> Duration {
     let delay = base_secs.saturating_mul(1u64 << attempt.min(6));
-    Duration::from_secs(delay.min(MAX_DELAY_SECS))
+    Duration::from_secs(delay.min(180))
 }
