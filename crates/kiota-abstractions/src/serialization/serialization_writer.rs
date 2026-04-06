@@ -1,6 +1,6 @@
+use std::collections::HashMap;
+
 use chrono::{DateTime, FixedOffset, NaiveDate, NaiveTime};
-use indexmap::IndexMap;
-use std::any::Any;
 use uuid::Uuid;
 
 use crate::iso_duration::IsoDuration;
@@ -115,7 +115,7 @@ pub trait SerializationWriter: Send + Sync {
 
     fn write_additional_data(
         &mut self,
-        data: &IndexMap<String, Box<dyn Any + Send + Sync>>,
+        data: &HashMap<String, serde_json::Value>,
     ) -> Result<(), KiotaError>;
 
     fn get_serialized_content(&mut self) -> Result<Vec<u8>, KiotaError>;

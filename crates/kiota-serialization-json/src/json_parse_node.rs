@@ -206,19 +206,16 @@ impl ParseNode for JsonParseNode {
             return Ok(None);
         }
 
-        let item = factory(self)?;
+        let mut item = factory(self)?;
 
         if let Some(ref cb) = self.on_before {
             cb(&item);
         }
 
-        let deserializers = item.get_field_deserializers();
         if let Value::Object(map) = &self.value {
             for (key, val) in map {
-                if let Some(deserializer) = deserializers.get(key.as_str()) {
-                    let child = JsonParseNode::new(val.clone());
-                    deserializer(&child)?;
-                }
+                let child = JsonParseNode::new(val.clone());
+                item.assign_field(key, &child)?;
             }
         }
 

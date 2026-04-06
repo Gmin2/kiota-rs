@@ -1,6 +1,7 @@
 [workspace]
 resolver = "2"
 members = [
+    "generated",
     "crates/kiota-abstractions",
     "crates/kiota-http",
     "crates/kiota-serialization-json",

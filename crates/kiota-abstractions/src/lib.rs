@@ -28,7 +28,7 @@ pub use request_information::{
 };
 pub use request_option::RequestOption;
 pub use serialization::{
-    AdditionalDataHolder, FieldDeserializers, Parsable, ParsableFactory, ParseNode,
+    AdditionalDataHolder, Parsable, ParsableFactory, ParseNode,
     ParseNodeFactory, SerializationWriter, SerializationWriterFactory,
 };
 

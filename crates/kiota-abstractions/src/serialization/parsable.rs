@@ -5,16 +5,19 @@ use crate::KiotaError;
 use super::parse_node::ParseNode;
 use super::serialization_writer::SerializationWriter;
 
-/// Type alias for field deserializer closures.
-pub type FieldDeserializers =
-    IndexMap<String, Box<dyn Fn(&dyn ParseNode) -> Result<(), KiotaError> + Send + Sync>>;
-
 /// Factory function type for creating Parsable instances.
 pub type ParsableFactory<T> = fn(parse_node: &dyn ParseNode) -> Result<T, KiotaError>;
 
 /// The core trait that all generated model types implement.
 pub trait Parsable: Send + Sync + std::fmt::Debug {
-    fn get_field_deserializers(&self) -> FieldDeserializers;
+    /// Returns the list of field names this model knows how to deserialize.
+    fn field_names(&self) -> Vec<&'static str>;
+
+    /// Assigns a field value from a parse node during deserialization.
+    /// The parse node is positioned at the field's value.
+    fn assign_field(&mut self, field: &str, node: &dyn ParseNode) -> Result<(), KiotaError>;
+
+    /// Serializes the model to the writer.
     fn serialize(&self, writer: &mut dyn SerializationWriter) -> Result<(), KiotaError>;
 }
 

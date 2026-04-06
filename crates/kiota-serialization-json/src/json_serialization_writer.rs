@@ -1,7 +1,7 @@
+use std::collections::HashMap;
+
 use chrono::{DateTime, FixedOffset, NaiveDate, NaiveTime};
-use indexmap::IndexMap;
 use serde_json::{Map, Value};
-use std::any::Any;
 use uuid::Uuid;
 
 use kiota_abstractions::iso_duration::IsoDuration;
@@ -300,24 +300,10 @@ impl SerializationWriter for JsonSerializationWriter {
 
     fn write_additional_data(
         &mut self,
-        data: &IndexMap<String, Box<dyn Any + Send + Sync>>,
+        data: &HashMap<String, serde_json::Value>,
     ) -> Result<(), KiotaError> {
         for (key, val) in data {
-            if let Some(s) = val.downcast_ref::<String>() {
-                self.write_string_value(Some(key), s)?;
-            } else if let Some(&b) = val.downcast_ref::<bool>() {
-                self.write_bool_value(Some(key), b)?;
-            } else if let Some(&n) = val.downcast_ref::<i64>() {
-                self.write_i64_value(Some(key), n)?;
-            } else if let Some(&n) = val.downcast_ref::<i32>() {
-                self.write_i32_value(Some(key), n)?;
-            } else if let Some(&n) = val.downcast_ref::<f64>() {
-                self.write_f64_value(Some(key), n)?;
-            } else if let Some(&n) = val.downcast_ref::<f32>() {
-                self.write_f32_value(Some(key), n)?;
-            } else {
-                self.write_null_value(Some(key))?;
-            }
+            self.write_value(Some(key), val.clone())?;
         }
         Ok(())
     }
