@@ -15,8 +15,12 @@ impl PostsClient {
         PostsRequestBuilder::new(self.base.path_parameters.clone(), self.base.request_adapter.clone())
     }
     pub fn new(request_adapter: std::sync::Arc<dyn RequestAdapter>) -> Self {
-        let path_parameters = std::collections::HashMap::new();
-        // TODO: set base url to "https://jsonplaceholder.typicode.com" if adapter has none
+        let mut path_parameters = std::collections::HashMap::new();
+        if request_adapter.base_url().is_empty() {
+            path_parameters.insert("baseurl".to_string(), "https://jsonplaceholder.typicode.com".to_string());
+        } else {
+            path_parameters.insert("baseurl".to_string(), request_adapter.base_url().to_string());
+        }
         Self {
             base: BaseRequestBuilder::new(request_adapter, "{+baseurl}".to_string(), path_parameters),
         }
