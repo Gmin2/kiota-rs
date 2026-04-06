@@ -1,0 +1,16 @@
+[package]
+name = "kiota-abstractions"
+version = "0.1.0"
+edition = "2021"
+description = "Core abstractions for Kiota-generated Rust API clients"
+license = "MIT"
+
+[dependencies]
+async-trait = { workspace = true }
+chrono = { workspace = true }
+indexmap = { workspace = true }
+once_cell = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+url = { workspace = true }
+uuid = { workspace = true }
