@@ -23,7 +23,7 @@ impl FindByStatusRequestBuilder {
         }
     }
     /// Multiple status values can be provided with comma separated strings
-    pub async fn get(&self, config: Option<&RequestConfiguration<DefaultQueryParameters>>) -> Result<Vec<Pet>, KiotaError> {
+    pub async fn get(&self, config: Option<&RequestConfiguration<FindByStatusRequestBuilderGetQueryParameters>>) -> Result<Vec<Pet>, KiotaError> {
         let request_info = self.to_get_request_information(config)?;
         let factory: Box<dyn Fn(&dyn ParseNode) -> Result<Box<dyn Parsable>, KiotaError> + Send + Sync> =
             Box::new(|node| Ok(Box::new(Pet::create_from_discriminator_value(node)?)));
@@ -34,12 +34,26 @@ impl FindByStatusRequestBuilder {
         Ok(typed)
     }
     /// Multiple status values can be provided with comma separated strings
-    pub fn to_get_request_information(&self, config: Option<&RequestConfiguration<DefaultQueryParameters>>) -> Result<RequestInformation, KiotaError> {
+    pub fn to_get_request_information(&self, config: Option<&RequestConfiguration<FindByStatusRequestBuilderGetQueryParameters>>) -> Result<RequestInformation, KiotaError> {
         let mut request_info = RequestInformation::new_with_method_and_url_template(HttpMethod::Get, &self.base.url_template, self.base.path_parameters.clone());
         if let Some(c) = config {
             request_info.configure(c);
         }
         request_info.headers.try_add("Accept", "application/json");
         Ok(request_info)
+    }
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct FindByStatusRequestBuilderGetQueryParameters {
+    /// Status values that need to be considered for filter
+    pub status: Vec<String>,
+}
+
+impl kiota_abstractions::QueryParameters for FindByStatusRequestBuilderGetQueryParameters {
+    fn to_query_parameters(&self) -> std::collections::HashMap<String, String> {
+        let mut params = std::collections::HashMap::new();
+        if !self.status.is_empty() { params.insert("status".to_string(), self.status.join(",")); }
+        params
     }
 }

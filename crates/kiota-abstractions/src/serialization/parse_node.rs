@@ -27,6 +27,12 @@ pub trait ParseNode: Send + Sync {
 
     fn get_child_node(&self, identifier: &str) -> Result<Option<Box<dyn ParseNode>>, KiotaError>;
 
+    /// Returns child nodes for array iteration. Dyn-compatible alternative to get_collection_of_*.
+    fn get_child_nodes(&self) -> Result<Vec<Box<dyn ParseNode>>, KiotaError>;
+
+    /// Gets a collection of string values from an array node.
+    fn get_collection_of_string_values(&self) -> Result<Vec<String>, KiotaError>;
+
     fn get_object_value<T: Parsable + Default>(
         &self,
         factory: ParsableFactory<T>,

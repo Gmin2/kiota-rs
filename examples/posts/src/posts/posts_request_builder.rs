@@ -30,7 +30,7 @@ impl PostsRequestBuilder {
         }
     }
     /// Get posts
-    pub async fn get(&self, config: Option<&RequestConfiguration<DefaultQueryParameters>>) -> Result<Vec<Post>, KiotaError> {
+    pub async fn get(&self, config: Option<&RequestConfiguration<PostsRequestBuilderGetQueryParameters>>) -> Result<Vec<Post>, KiotaError> {
         let request_info = self.to_get_request_information(config)?;
         let factory: Box<dyn Fn(&dyn ParseNode) -> Result<Box<dyn Parsable>, KiotaError> + Send + Sync> =
             Box::new(|node| Ok(Box::new(Post::create_from_discriminator_value(node)?)));
@@ -49,7 +49,7 @@ impl PostsRequestBuilder {
         Ok(result.and_then(|r| r.as_any().downcast::<Post>().ok().map(|b| *b)))
     }
     /// Get posts
-    pub fn to_get_request_information(&self, config: Option<&RequestConfiguration<DefaultQueryParameters>>) -> Result<RequestInformation, KiotaError> {
+    pub fn to_get_request_information(&self, config: Option<&RequestConfiguration<PostsRequestBuilderGetQueryParameters>>) -> Result<RequestInformation, KiotaError> {
         let mut request_info = RequestInformation::new_with_method_and_url_template(HttpMethod::Get, &self.base.url_template, self.base.path_parameters.clone());
         if let Some(c) = config {
             request_info.configure(c);
@@ -68,5 +68,22 @@ impl PostsRequestBuilder {
             request_info.set_content_from_parsable(self.base.request_adapter.serialization_writer_factory(), "application/json", b as &dyn Parsable)?;
         }
         Ok(request_info)
+    }
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct PostsRequestBuilderGetQueryParameters {
+    /// Filter results by title
+    pub title: Option<String>,
+    /// Filter results by user ID
+    pub user_id: Option<String>,
+}
+
+impl kiota_abstractions::QueryParameters for PostsRequestBuilderGetQueryParameters {
+    fn to_query_parameters(&self) -> std::collections::HashMap<String, String> {
+        let mut params = std::collections::HashMap::new();
+        if let Some(ref v) = self.title { params.insert("title".to_string(), v.to_string()); }
+        if let Some(ref v) = self.user_id { params.insert("userId".to_string(), v.to_string()); }
+        params
     }
 }

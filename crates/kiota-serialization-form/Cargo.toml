@@ -1,0 +1,9 @@
+[package]
+name = "kiota-serialization-form"
+version = "0.1.0"
+edition = "2021"
+description = "Form URL-encoded serialization for Kiota-generated Rust API clients"
+license = "MIT"
+
+[dependencies]
+kiota-abstractions = { workspace = true }

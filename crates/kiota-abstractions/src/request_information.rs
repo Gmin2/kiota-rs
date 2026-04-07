@@ -46,17 +46,27 @@ impl RequestInformation {
 
     /// Expands the URL template with path and query parameters.
     pub fn get_uri(&self) -> Result<url::Url, KiotaError> {
-        // TODO: use std-uritemplate for RFC 6570 expansion
+        // TODO: use std-uritemplate for full RFC 6570 expansion
         let mut uri = self.url_template.clone();
         for (key, value) in &self.path_parameters {
             uri = uri.replace(&format!("{{{key}}}"), value);
             uri = uri.replace(&format!("{{+{key}}}"), value);
         }
-        // Strip remaining template expressions
+        // strip remaining template expressions (e.g., {?title*,userId*})
         if let Some(idx) = uri.find('{') {
             uri.truncate(idx);
         }
-        url::Url::parse(&uri).map_err(|e| KiotaError::Url(e.to_string()))
+        let mut parsed = url::Url::parse(&uri).map_err(|e| KiotaError::Url(e.to_string()))?;
+        // append query parameters
+        if !self.query_parameters.is_empty() {
+            let mut pairs = parsed.query_pairs_mut();
+            for (key, value) in &self.query_parameters {
+                if !value.is_empty() {
+                    pairs.append_pair(key, value);
+                }
+            }
+        }
+        Ok(parsed)
     }
 
     pub fn add_request_options(&mut self, options: Vec<Box<dyn RequestOption>>) {

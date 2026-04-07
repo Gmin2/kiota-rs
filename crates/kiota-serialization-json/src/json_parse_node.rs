@@ -198,6 +198,26 @@ impl ParseNode for JsonParseNode {
         }
     }
 
+    fn get_child_nodes(&self) -> Result<Vec<Box<dyn ParseNode>>, KiotaError> {
+        match &self.value {
+            Value::Array(arr) => {
+                Ok(arr.iter().map(|v| -> Box<dyn ParseNode> {
+                    Box::new(JsonParseNode::new(v.clone()))
+                }).collect())
+            }
+            _ => Ok(Vec::new()),
+        }
+    }
+
+    fn get_collection_of_string_values(&self) -> Result<Vec<String>, KiotaError> {
+        match &self.value {
+            Value::Array(arr) => {
+                Ok(arr.iter().filter_map(|v| v.as_str().map(|s| s.to_string())).collect())
+            }
+            _ => Ok(Vec::new()),
+        }
+    }
+
     fn get_object_value<T: Parsable + Default>(
         &self,
         factory: ParsableFactory<T>,

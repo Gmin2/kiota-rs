@@ -30,12 +30,28 @@ impl Parsable for Pet {
 
     fn assign_field(&mut self, field: &str, node: &dyn ParseNode) -> Result<(), KiotaError> {
         match field {
-            "category" => { /* TODO: deserialize nested object for category */ }
+            "category" => {
+                let mut obj = Category::default();
+                for f in obj.field_names().to_vec() {
+                    if let Ok(Some(n)) = node.get_child_node(f) { obj.assign_field(f, n.as_ref())?; }
+                }
+                self.category = Some(obj);
+            }
             "id" => self.id = node.get_i64_value()?,
             "name" => self.name = node.get_string_value()?,
-            "photoUrls" => { /* TODO: deserialize collection for photo_urls */ }
+            "photoUrls" => self.photo_urls = node.get_collection_of_string_values()?,
             "status" => self.status = node.get_string_value()?.and_then(|s| PetStatus::parse(&s)),
-            "tags" => { /* TODO: deserialize collection for tags */ }
+            "tags" => {
+                let mut items = Vec::new();
+                for child in node.get_child_nodes()? {
+                    let mut obj = Tag::default();
+                    for f in obj.field_names().to_vec() {
+                        if let Ok(Some(n)) = child.get_child_node(f) { obj.assign_field(f, n.as_ref())?; }
+                    }
+                    items.push(obj);
+                }
+                self.tags = items;
+            }
             _ => {}
         }
         Ok(())

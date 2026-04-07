@@ -1,25 +1,25 @@
 Information: KiotaBuilder Cleaning output directory /home/mintu-ubuntu/coding/interledger/rust-kioto/kiota-rust/examples/petstore/src
 Debug: KiotaBuilder kiota version 1.31.0
-Debug: KiotaBuilder cache file /tmp/kiota/cache/generation/3A0927DDD62CDFA9B32CCB0EBD50D7E2D1B137BBE34E6ADF312409D819A9ABC0/swagger.json not found, downloading from https://petstore.swagger.io/v2/swagger.json
-Information: KiotaBuilder loaded description from remote source
-Debug: KiotaBuilder step 1 - reading the stream - took 00:00:03.6458504
-Warning: KiotaBuilder OpenAPI warning: #/ - Multiple servers entries were found in the OpenAPI description. Only the first one will be used. The root URL can be set manually with the request adapter.
-Debug: KiotaBuilder step 2 - parsing the document - took 00:00:00.1343934
-Debug: KiotaBuilder step 3 - updating generation configuration from kiota extension - took 00:00:00.0002618
-Debug: KiotaBuilder step 4 - filtering API paths with patterns - took 00:00:00.0030833
-Information: KiotaBuilder Client root URL set to https://petstore.swagger.io/v2
-Debug: KiotaBuilder step 5 - checking whether the output should be updated - took 00:00:00.0381041
-Debug: KiotaBuilder step 6 - create uri space - took 00:00:00.0035409
-Debug: KiotaBuilder InitializeInheritanceIndex 00:00:00.0046268
-Debug: KiotaBuilder CreateRequestBuilderClass 00:00:00
-Debug: KiotaBuilder MapTypeDefinitions 00:00:00.0072421
-Debug: KiotaBuilder TrimInheritedModels 00:00:00
-Debug: KiotaBuilder CleanUpInternalState 00:00:00
-Debug: KiotaBuilder step 7 - create source model - took 00:00:00.0928042
-Debug: KiotaBuilder 39ms: Language refinement applied
-Debug: KiotaBuilder step 8 - refine by language - took 00:00:00.0448903
-Debug: KiotaBuilder step 9 - writing files - took 00:00:00.0427474
 Debug: KiotaBuilder cache file /tmp/kiota/cache/generation/3A0927DDD62CDFA9B32CCB0EBD50D7E2D1B137BBE34E6ADF312409D819A9ABC0/swagger.json is up to date and clearCache is False, using it
 Information: KiotaBuilder loaded description from remote source
-Debug: KiotaBuilder step 10 - writing lock file - took 00:00:00.0197012
+Debug: KiotaBuilder step 1 - reading the stream - took 00:00:00.0292834
+Warning: KiotaBuilder OpenAPI warning: #/ - Multiple servers entries were found in the OpenAPI description. Only the first one will be used. The root URL can be set manually with the request adapter.
+Debug: KiotaBuilder step 2 - parsing the document - took 00:00:00.1608070
+Debug: KiotaBuilder step 3 - updating generation configuration from kiota extension - took 00:00:00.0002806
+Debug: KiotaBuilder step 4 - filtering API paths with patterns - took 00:00:00.0041101
+Information: KiotaBuilder Client root URL set to https://petstore.swagger.io/v2
+Debug: KiotaBuilder step 5 - checking whether the output should be updated - took 00:00:00.0348493
+Debug: KiotaBuilder step 6 - create uri space - took 00:00:00.0050445
+Debug: KiotaBuilder InitializeInheritanceIndex 00:00:00.0054739
+Debug: KiotaBuilder CreateRequestBuilderClass 00:00:00
+Debug: KiotaBuilder MapTypeDefinitions 00:00:00.0084256
+Debug: KiotaBuilder TrimInheritedModels 00:00:00
+Debug: KiotaBuilder CleanUpInternalState 00:00:00
+Debug: KiotaBuilder step 7 - create source model - took 00:00:00.1130723
+Debug: KiotaBuilder 39ms: Language refinement applied
+Debug: KiotaBuilder step 8 - refine by language - took 00:00:00.0434388
+Debug: KiotaBuilder step 9 - writing files - took 00:00:00.0554270
+Debug: KiotaBuilder cache file /tmp/kiota/cache/generation/3A0927DDD62CDFA9B32CCB0EBD50D7E2D1B137BBE34E6ADF312409D819A9ABC0/swagger.json is up to date and clearCache is False, using it
+Information: KiotaBuilder loaded description from remote source
+Debug: KiotaBuilder step 10 - writing lock file - took 00:00:00.0174336
 Debug: KiotaBuilder Api manifest path: /home/mintu-ubuntu/coding/interledger/rust-kioto/kiota/apimanifest.json

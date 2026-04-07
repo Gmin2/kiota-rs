@@ -22,16 +22,33 @@ impl LoginRequestBuilder {
         }
     }
     /// Logs user into the system
-    pub async fn get(&self, config: Option<&RequestConfiguration<DefaultQueryParameters>>) -> Result<Option<String>, KiotaError> {
+    pub async fn get(&self, config: Option<&RequestConfiguration<LoginRequestBuilderGetQueryParameters>>) -> Result<Option<String>, KiotaError> {
         let request_info = self.to_get_request_information(config)?;
         todo!("unknown return type")
     }
-    pub fn to_get_request_information(&self, config: Option<&RequestConfiguration<DefaultQueryParameters>>) -> Result<RequestInformation, KiotaError> {
+    pub fn to_get_request_information(&self, config: Option<&RequestConfiguration<LoginRequestBuilderGetQueryParameters>>) -> Result<RequestInformation, KiotaError> {
         let mut request_info = RequestInformation::new_with_method_and_url_template(HttpMethod::Get, &self.base.url_template, self.base.path_parameters.clone());
         if let Some(c) = config {
             request_info.configure(c);
         }
         request_info.headers.try_add("Accept", "application/json");
         Ok(request_info)
+    }
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct LoginRequestBuilderGetQueryParameters {
+    /// The password for login in clear text
+    pub password: Option<String>,
+    /// The user name for login
+    pub username: Option<String>,
+}
+
+impl kiota_abstractions::QueryParameters for LoginRequestBuilderGetQueryParameters {
+    fn to_query_parameters(&self) -> std::collections::HashMap<String, String> {
+        let mut params = std::collections::HashMap::new();
+        if let Some(ref v) = self.password { params.insert("password".to_string(), v.clone()); }
+        if let Some(ref v) = self.username { params.insert("username".to_string(), v.clone()); }
+        params
     }
 }

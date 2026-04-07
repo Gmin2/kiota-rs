@@ -1,0 +1,15 @@
+[package]
+name = "kiota-authentication"
+version = "0.1.0"
+edition = "2021"
+description = "GNAP authentication provider for Open Payments API"
+license = "MIT"
+
+[dependencies]
+kiota-abstractions = { workspace = true }
+async-trait = { workspace = true }
+reqwest = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tokio = { workspace = true }
+url = { workspace = true }

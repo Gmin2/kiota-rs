@@ -1,0 +1,9 @@
+[package]
+name = "kiota-serialization-text"
+version = "0.1.0"
+edition = "2021"
+description = "Plain text serialization for Kiota-generated Rust API clients"
+license = "MIT"
+
+[dependencies]
+kiota-abstractions = { workspace = true }

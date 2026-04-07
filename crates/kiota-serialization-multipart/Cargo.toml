@@ -1,0 +1,10 @@
+[package]
+name = "kiota-serialization-multipart"
+version = "0.1.0"
+edition = "2021"
+description = "Multipart form-data serialization for Kiota-generated Rust API clients"
+license = "MIT"
+
+[dependencies]
+kiota-abstractions = { workspace = true }
+uuid = { workspace = true }

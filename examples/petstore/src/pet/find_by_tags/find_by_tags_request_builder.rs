@@ -23,7 +23,7 @@ impl FindByTagsRequestBuilder {
         }
     }
     /// Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
-    pub async fn get(&self, config: Option<&RequestConfiguration<DefaultQueryParameters>>) -> Result<Vec<Pet>, KiotaError> {
+    pub async fn get(&self, config: Option<&RequestConfiguration<FindByTagsRequestBuilderGetQueryParameters>>) -> Result<Vec<Pet>, KiotaError> {
         let request_info = self.to_get_request_information(config)?;
         let factory: Box<dyn Fn(&dyn ParseNode) -> Result<Box<dyn Parsable>, KiotaError> + Send + Sync> =
             Box::new(|node| Ok(Box::new(Pet::create_from_discriminator_value(node)?)));
@@ -34,12 +34,26 @@ impl FindByTagsRequestBuilder {
         Ok(typed)
     }
     /// Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
-    pub fn to_get_request_information(&self, config: Option<&RequestConfiguration<DefaultQueryParameters>>) -> Result<RequestInformation, KiotaError> {
+    pub fn to_get_request_information(&self, config: Option<&RequestConfiguration<FindByTagsRequestBuilderGetQueryParameters>>) -> Result<RequestInformation, KiotaError> {
         let mut request_info = RequestInformation::new_with_method_and_url_template(HttpMethod::Get, &self.base.url_template, self.base.path_parameters.clone());
         if let Some(c) = config {
             request_info.configure(c);
         }
         request_info.headers.try_add("Accept", "application/json");
         Ok(request_info)
+    }
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct FindByTagsRequestBuilderGetQueryParameters {
+    /// Tags to filter by
+    pub tags: Vec<String>,
+}
+
+impl kiota_abstractions::QueryParameters for FindByTagsRequestBuilderGetQueryParameters {
+    fn to_query_parameters(&self) -> std::collections::HashMap<String, String> {
+        let mut params = std::collections::HashMap::new();
+        if !self.tags.is_empty() { params.insert("tags".to_string(), self.tags.join(",")); }
+        params
     }
 }

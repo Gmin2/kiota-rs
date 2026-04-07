@@ -16,8 +16,10 @@ pub mod store;
 pub mod untyped;
 
 mod base_request_builder;
+pub mod multipart_body;
 
 pub use base_request_builder::BaseRequestBuilder;
+pub use multipart_body::MultipartBody;
 pub use error::{ApiError, KiotaError};
 pub use headers::{RequestHeaders, ResponseHeaders};
 pub use http_method::HttpMethod;

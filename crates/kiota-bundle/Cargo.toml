@@ -1,0 +1,14 @@
+[package]
+name = "kiota-bundle"
+version = "0.1.0"
+edition = "2021"
+description = "Default bundle for Kiota-generated Rust API clients"
+license = "MIT"
+
+[dependencies]
+kiota-abstractions = { workspace = true }
+kiota-http = { workspace = true }
+kiota-serialization-json = { workspace = true }
+kiota-serialization-form = { workspace = true }
+kiota-serialization-text = { workspace = true }
+kiota-serialization-multipart = { workspace = true }
