@@ -3,6 +3,7 @@ resolver = "2"
 members = [
     "examples/posts",
     "examples/petstore",
+    "examples/github-releases",
     "crates/kiota-abstractions",
     "crates/kiota-http",
     "crates/kiota-serialization-json",

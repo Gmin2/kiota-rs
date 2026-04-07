@@ -269,6 +269,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "github-releases-client"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "kiota-abstractions",
+ "kiota-http",
+ "kiota-serialization-json",
+ "serde_json",
+ "tokio",
+]
+
+[[package]]
 name = "hashbrown"
 version = "0.15.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
