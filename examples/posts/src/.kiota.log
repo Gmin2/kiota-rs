@@ -1,0 +1,22 @@
+Information: KiotaBuilder Cleaning output directory /home/mintu-ubuntu/coding/interledger/rust-kioto/kiota-rust/generated/src
+Debug: KiotaBuilder kiota version 1.31.0
+Information: KiotaBuilder loaded description from local source
+Debug: KiotaBuilder step 1 - reading the stream - took 00:00:00.0114697
+Debug: KiotaBuilder step 2 - parsing the document - took 00:00:00.1405594
+Debug: KiotaBuilder step 3 - updating generation configuration from kiota extension - took 00:00:00.0002230
+Debug: KiotaBuilder step 4 - filtering API paths with patterns - took 00:00:00.0031645
+Information: KiotaBuilder Client root URL set to https://jsonplaceholder.typicode.com
+Debug: KiotaBuilder step 5 - checking whether the output should be updated - took 00:00:00.0299081
+Debug: KiotaBuilder step 6 - create uri space - took 00:00:00.0053049
+Debug: KiotaBuilder InitializeInheritanceIndex 00:00:00.0051392
+Debug: KiotaBuilder CreateRequestBuilderClass 00:00:00
+Debug: KiotaBuilder MapTypeDefinitions 00:00:00.0054944
+Debug: KiotaBuilder TrimInheritedModels 00:00:00
+Debug: KiotaBuilder CleanUpInternalState 00:00:00
+Debug: KiotaBuilder step 7 - create source model - took 00:00:00.1168310
+Debug: KiotaBuilder 39ms: Language refinement applied
+Debug: KiotaBuilder step 8 - refine by language - took 00:00:00.0434992
+Debug: KiotaBuilder step 9 - writing files - took 00:00:00.0339822
+Information: KiotaBuilder loaded description from local source
+Debug: KiotaBuilder step 10 - writing lock file - took 00:00:00.0186345
+Debug: KiotaBuilder Api manifest path: /home/mintu-ubuntu/coding/interledger/rust-kioto/kiota/apimanifest.json
