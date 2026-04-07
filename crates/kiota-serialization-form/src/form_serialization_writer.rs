@@ -1,0 +1,148 @@
+use std::collections::HashMap;
+use chrono::{DateTime, FixedOffset, NaiveDate, NaiveTime};
+use uuid::Uuid;
+
+use kiota_abstractions::iso_duration::IsoDuration;
+use kiota_abstractions::serialization::{Parsable, ParsableAction, ParsableWriter, SerializationWriter};
+use kiota_abstractions::KiotaError;
+
+pub struct FormSerializationWriter {
+    buf: String,
+    on_before: Option<ParsableAction>,
+    on_after: Option<ParsableAction>,
+    on_start: Option<ParsableWriter>,
+}
+
+impl FormSerializationWriter {
+    pub fn new() -> Self {
+        Self { buf: String::new(), on_before: None, on_after: None, on_start: None }
+    }
+
+    fn append(&mut self, key: &str, value: &str) {
+        if !self.buf.is_empty() {
+            self.buf.push('&');
+        }
+        self.buf.push_str(&urlencoding::encode(key));
+        self.buf.push('=');
+        self.buf.push_str(&urlencoding::encode(value));
+    }
+
+    fn no_collections() -> KiotaError {
+        KiotaError::Serialization("form writer does not support collection values".to_string())
+    }
+}
+
+impl Default for FormSerializationWriter {
+    fn default() -> Self { Self::new() }
+}
+
+impl SerializationWriter for FormSerializationWriter {
+    fn write_string_value(&mut self, key: Option<&str>, value: &str) -> Result<(), KiotaError> {
+        if let Some(k) = key { self.append(k, value); }
+        Ok(())
+    }
+    fn write_bool_value(&mut self, key: Option<&str>, value: bool) -> Result<(), KiotaError> {
+        if let Some(k) = key { self.append(k, &value.to_string()); }
+        Ok(())
+    }
+    fn write_i8_value(&mut self, key: Option<&str>, value: i8) -> Result<(), KiotaError> {
+        if let Some(k) = key { self.append(k, &value.to_string()); }
+        Ok(())
+    }
+    fn write_u8_value(&mut self, key: Option<&str>, value: u8) -> Result<(), KiotaError> {
+        if let Some(k) = key { self.append(k, &value.to_string()); }
+        Ok(())
+    }
+    fn write_i32_value(&mut self, key: Option<&str>, value: i32) -> Result<(), KiotaError> {
+        if let Some(k) = key { self.append(k, &value.to_string()); }
+        Ok(())
+    }
+    fn write_i64_value(&mut self, key: Option<&str>, value: i64) -> Result<(), KiotaError> {
+        if let Some(k) = key { self.append(k, &value.to_string()); }
+        Ok(())
+    }
+    fn write_f32_value(&mut self, key: Option<&str>, value: f32) -> Result<(), KiotaError> {
+        if let Some(k) = key { self.append(k, &value.to_string()); }
+        Ok(())
+    }
+    fn write_f64_value(&mut self, key: Option<&str>, value: f64) -> Result<(), KiotaError> {
+        if let Some(k) = key { self.append(k, &value.to_string()); }
+        Ok(())
+    }
+    fn write_uuid_value(&mut self, key: Option<&str>, value: &Uuid) -> Result<(), KiotaError> {
+        if let Some(k) = key { self.append(k, &value.to_string()); }
+        Ok(())
+    }
+    fn write_date_time_value(&mut self, key: Option<&str>, value: &DateTime<FixedOffset>) -> Result<(), KiotaError> {
+        if let Some(k) = key { self.append(k, &value.to_rfc3339()); }
+        Ok(())
+    }
+    fn write_date_only_value(&mut self, key: Option<&str>, value: &NaiveDate) -> Result<(), KiotaError> {
+        if let Some(k) = key { self.append(k, &value.format("%Y-%m-%d").to_string()); }
+        Ok(())
+    }
+    fn write_time_only_value(&mut self, key: Option<&str>, value: &NaiveTime) -> Result<(), KiotaError> {
+        if let Some(k) = key { self.append(k, &value.format("%H:%M:%S").to_string()); }
+        Ok(())
+    }
+    fn write_duration_value(&mut self, key: Option<&str>, value: &IsoDuration) -> Result<(), KiotaError> {
+        if let Some(k) = key { self.append(k, &value.to_string()); }
+        Ok(())
+    }
+    fn write_byte_array_value(&mut self, _: Option<&str>, _: &[u8]) -> Result<(), KiotaError> {
+        Err(Self::no_collections())
+    }
+    fn write_null_value(&mut self, key: Option<&str>) -> Result<(), KiotaError> {
+        if let Some(k) = key { self.append(k, "null"); }
+        Ok(())
+    }
+    fn write_object_value(&mut self, _: Option<&str>, value: &dyn Parsable, _: &[&dyn Parsable]) -> Result<(), KiotaError> {
+        value.serialize(self)
+    }
+    fn write_collection_of_object_values(&mut self, _: Option<&str>, _: &[&dyn Parsable]) -> Result<(), KiotaError> {
+        Err(Self::no_collections())
+    }
+    fn write_collection_of_string_values(&mut self, _: Option<&str>, _: &[String]) -> Result<(), KiotaError> {
+        Err(Self::no_collections())
+    }
+    fn write_collection_of_bool_values(&mut self, _: Option<&str>, _: &[bool]) -> Result<(), KiotaError> {
+        Err(Self::no_collections())
+    }
+    fn write_collection_of_i32_values(&mut self, _: Option<&str>, _: &[i32]) -> Result<(), KiotaError> {
+        Err(Self::no_collections())
+    }
+    fn write_collection_of_i64_values(&mut self, _: Option<&str>, _: &[i64]) -> Result<(), KiotaError> {
+        Err(Self::no_collections())
+    }
+    fn write_collection_of_f32_values(&mut self, _: Option<&str>, _: &[f32]) -> Result<(), KiotaError> {
+        Err(Self::no_collections())
+    }
+    fn write_collection_of_f64_values(&mut self, _: Option<&str>, _: &[f64]) -> Result<(), KiotaError> {
+        Err(Self::no_collections())
+    }
+    fn write_enum_value<T: std::fmt::Display>(&mut self, key: Option<&str>, value: &T) -> Result<(), KiotaError> where Self: Sized {
+        if let Some(k) = key { self.append(k, &value.to_string()); }
+        Ok(())
+    }
+    fn write_collection_of_enum_values<T: std::fmt::Display>(&mut self, _: Option<&str>, _: &[T]) -> Result<(), KiotaError> where Self: Sized {
+        Err(Self::no_collections())
+    }
+    fn write_additional_data(&mut self, data: &HashMap<String, serde_json::Value>) -> Result<(), KiotaError> {
+        for (key, val) in data {
+            match val {
+                serde_json::Value::String(s) => self.append(key, s),
+                v => self.append(key, &v.to_string()),
+            }
+        }
+        Ok(())
+    }
+    fn get_serialized_content(&mut self) -> Result<Vec<u8>, KiotaError> {
+        Ok(std::mem::take(&mut self.buf).into_bytes())
+    }
+    fn on_before_serialization(&self) -> Option<&ParsableAction> { self.on_before.as_ref() }
+    fn set_on_before_serialization(&mut self, action: Option<ParsableAction>) { self.on_before = action; }
+    fn on_after_serialization(&self) -> Option<&ParsableAction> { self.on_after.as_ref() }
+    fn set_on_after_serialization(&mut self, action: Option<ParsableAction>) { self.on_after = action; }
+    fn on_start_serialization(&self) -> Option<&ParsableWriter> { self.on_start.as_ref() }
+    fn set_on_start_serialization(&mut self, action: Option<ParsableWriter>) { self.on_start = action; }
+}
